@@ -1,0 +1,16 @@
+/* OVERWRITE BOOTSTRAP */
+.pager li > a, .pager li > span {
+  cursor: pointer;
+}
+.current-step {
+  background: #3a3a3a;
+}
+.step-1 {
+  border-radius: 0 5px 5px 0;
+}
+.step-2 {
+  border-radius: 5px;
+}
+.step-3 {
+  border-radius: 5px 0 0 5px;
+}
