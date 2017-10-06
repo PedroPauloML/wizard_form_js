@@ -17,24 +17,32 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-lg-6">
+    <div class="row" style="display: flex">
+      <div class="col-lg-8" style="margin: 0 auto">
         <div class="well">
           <form class="form-horizontal" action="#" method="post">
 
-            <div class="row">
-              <div class="col-lg-4 step-1 current-step">
+            <div id="steps" class="row">
+              <div class="col-lg-4 col-sm-4 step-1 current-step">
                 <h3>Etapa 1</h3>
                 <span class="help-block">Informações pessoais</span>
               </div>
-              <div class="col-lg-4 step-2">
+              <div class="col-lg-4 col-sm-4 step-2">
                 <h3>Etapa 2</h3>
                 <span class="help-block">Logradouro</span>
               </div>
-              <div class="col-lg-4 step-3">
+              <div class="col-lg-4 col-sm-4 step-3">
                 <h3>Etapa 3</h3>
                 <span class="help-block">Cadastradar credenciais</span>
               </div>
+              <div class="col-lg-4 col-sm-4 step-4">
+                <h3>Etapa 4</h3>
+                <span class="help-block">Cadastradar credenciais</span>
+              </div>
+              <!-- <div class="col-lg-4 col-sm-4 step-5">
+                <h3>Etapa 5</h3>
+                <span class="help-block">Cadastradar credenciais</span>
+              </div> -->
             </div>
 
             <hr>
@@ -68,6 +76,18 @@
                 <label for="inputBirthday" class="col-lg-2 control-label">Data de nascimento</label>
                 <div class="col-lg-6">
                   <input type="date" class="form-control" id="inputBirthday" min="1900-01-01" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputCPF" class="col-lg-2 control-label">CPF</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="inputCPF" placeholder="CPF" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTelefone" class="col-lg-2 control-label">Telefone</label>
+                <div class="col-lg-10">
+                  <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone" required>
                 </div>
               </div>
             </fieldset>
@@ -119,8 +139,8 @@
 
             <div class="form-group">
               <div class="col-lg-10 col-lg-offset-2">
-                <button class="btn btn-default">Cancel</button>
-                <button type="submit" class="btn btn-primary disabled">Submit</button>
+                <button class="btn btn-default">Cancelar</button>
+                <button type="submit" class="btn btn-primary disabled">Enviar</button>
               </div>
             </div>
 
@@ -135,18 +155,24 @@
   <script src="_js/usebootstrap.js"></script>
   <script src="_js/jqcidades.js"></script>
   <script src="_js/notify.min.js"></script>
+  <script src="_js/jquery.mask.min.js"></script>
 
   <!-- CONFIGURAÇÕES INICIAIS -->
   <script>
-    var date_today = (new Date().getFullYear()) + "-" +
+    var default_date = (new Date().getFullYear() - 18) + "-" +
                      ("0" + (new Date().getMonth() + 1)).slice(-2) + "-" +
                      ("0" + (new Date().getDay() + 1)).slice(-2);;
     var inputBirthday = document.getElementById('inputBirthday');
-    inputBirthday.value = date_today;
-    inputBirthday.max = date_today;
+
+    inputBirthday.value = default_date;
+    inputBirthday.max = default_date;
 
     $(document).ready(function() {
       $('select#estado').carregaCidades('select#cidade');
+      var cpf = $('#inputCPF').mask('000.000.000-00');
+      cpf[0].setAttribute('minlength', cpf[0].getAttribute('maxlength'));
+      var telefone = $('#inputTelefone').mask('(00) 0 0000-0000');
+      telefone[0].setAttribute('minlength', telefone[0].getAttribute('maxlength'));
     });
   </script>
 
@@ -158,14 +184,21 @@
     var a_previouStep = document.querySelector('li#previouStep');
     var a_nextStep = document.querySelector('li#nextStep');
     var b_submit = document.querySelector("button[type='submit']");
+    var steps = document.getElementById('steps');
 
     function previouStep() {
       if (!a_previouStep.classList.value.includes('disabled')) {
         fieldsets.item(aux).style.display = ('none');
         fieldsets.item(aux - 1).style.display = ('block');
         aux--;
-        document.getElementsByClassName('step-' + (aux + 2))[0].classList.remove('current-step');
-        document.getElementsByClassName('step-' + (aux + 1))[0].classList.add('current-step');
+        if (aux == 0) {
+
+        }
+        var previouStep = document.getElementsByClassName('step-' + (aux + 2))[0];
+        previouStep.classList.remove('current-step');
+        var currentStep = document.getElementsByClassName('step-' + (aux + 1))[0];
+        currentStep.classList.add('current-step');
+        steps.scrollTop = currentStep.offsetTop - 20;
         if (a_nextStep.classList.value.includes('disabled')) {
           a_nextStep.classList.remove('disabled');
           b_submit.classList.add('disabled');
@@ -180,8 +213,11 @@
         fieldsets.item(aux).style.display = ('none');
         fieldsets.item(aux + 1).style.display = ('block');
         aux++;
-        document.getElementsByClassName('step-' + aux)[0].classList.remove('current-step');
-        document.getElementsByClassName('step-' + (aux + 1))[0].classList.add('current-step');
+        var previouStep = document.getElementsByClassName('step-' + aux)[0];
+        previouStep.classList.remove('current-step');
+        var currentStep = document.getElementsByClassName('step-' + (aux + 1))[0];
+        currentStep.classList.add('current-step');
+        steps.scrollTop = currentStep.offsetTop - 20;
         if (a_previouStep.classList.value.includes('disabled')) {
           a_previouStep.classList.remove('disabled');
         }
@@ -210,7 +246,7 @@
     function validateStep1() {
       var inputs = fieldsets[0].getElementsByTagName('input');
       var result = true;
-      for (var i = 0; i <= inputs.length - 1; i++) {
+      for (var i = inputs.length - 1; i >= 0; i--) {
         if (!inputs[i].checkValidity()) {
           inputs[i].reportValidity();
           result = false;
@@ -221,7 +257,7 @@
     function validateStep2() {
       var selects = fieldsets[1].getElementsByTagName('select');
       var result = true;
-      for (var i = 0; i <= selects.length - 1; i++) {
+      for (var i = selects.length - 1; i <= 0; i--) {
         if (!selects[i].checkValidity()) {
           selects[i].reportValidity();
           result = false;
@@ -235,7 +271,7 @@
     function validateStep3() {
       var inputs = fieldsets[2].getElementsByTagName('input');
       var result = true;
-      for (var i = 0; i <= inputs.length - 1; i++) {
+      for (var i = inputs.length - 1; i >= 0; i--) {
         if (!inputs[i].checkValidity()) {
           inputs[i].reportValidity();
           result = false;

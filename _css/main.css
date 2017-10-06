@@ -2,13 +2,20 @@
 .pager li > a, .pager li > span {
   cursor: pointer;
 }
+div#steps {
+  overflow: hidden;
+  height: 85px;
+}
+div#steps::-webkit-scrollbar {
+    display: none;
+}
 .current-step {
   background: #3a3a3a;
 }
-.step-1 {
+.step-1, .step-4 {
   border-radius: 0 5px 5px 0;
 }
-.step-2 {
+.step-2, .step-5 {
   border-radius: 5px;
 }
 .step-3 {
